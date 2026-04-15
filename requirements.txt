@@ -1,0 +1,5 @@
+Django==5.2.13
+asgiref
+sqlparse
+tzdata
+threejs-requirements (optional, usually handled by CDN as seen in templates)

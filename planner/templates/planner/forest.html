@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>🌳 Your Forest</h1>
+
+<div id="forest3d" style="width:100%; height:700px;"></div>
+
+<script type="importmap">{
+    "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" }
+}
+</script>
+
+<script>
+const TREE_DATA = {{ tree_json|safe }};
+</script>
+
+<script type="module">
+
+import * as THREE from "three";
+import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
+
+const container = document.getElementById("forest3d");
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xd7f0d1);
+
+const camera = new THREE.PerspectiveCamera(
+60,
+container.clientWidth / 700,
+0.1,
+1000
+);
+
+const renderer = new THREE.WebGLRenderer({ antialias:true });
+renderer.setSize(container.clientWidth,700);
+container.appendChild(renderer.domElement);
+
+camera.position.set(0,25,40);
+camera.lookAt(0,0,0);
+
+const light = new THREE.DirectionalLight(0xffffff,1);
+light.position.set(20,50,20);
+scene.add(light);
+
+const ambient = new THREE.AmbientLight(0xffffff,0.6);
+scene.add(ambient);
+
+const loader = new GLTFLoader();
+
+function getModel(species){
+
+if(species==="giant_sequoia") return "oak.glb";
+if(species==="rainbow_eucalyptus") return "oak.glb";
+
+if(species==="yggdrasil") return "oak.glb";
+if(species==="kalpavriksha") return "oak.glb";
+if(species==="world_tree") return "oak.glb";
+
+return species + ".glb";
+
+}
+
+function loadTree(tree){
+
+const modelPath =`/static/models/trees/oak.glb`;
+
+loader.load(modelPath,function(gltf){
+
+const model = gltf.scene;
+
+model.position.x = (tree.pos_x-50)/2;
+model.position.z = (tree.pos_y-50)/2;
+
+let scale = 0.7 + tree.growth*0.25;
+
+model.scale.set(scale,scale,scale);
+
+scene.add(model);
+
+});
+
+}
+
+TREE_DATA.forEach(loadTree);
+
+function animate(){
+
+requestAnimationFrame(animate);
+
+scene.traverse(obj=>{
+if(obj.isMesh){
+obj.rotation.y += Math.sin(Date.now()*0.001)*0.0004;
+}
+});
+
+renderer.render(scene,camera);
+
+}
+
+animate();
+
+</script>
+
+<div id="treeInfoPopup" style="
+    display:none;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    background: linear-gradient(to top, #a5d6a7, #dcedc8);    padding:20px;
+    border-radius:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+    z-index:20000;
+    width:300px;
+">
+    <h3>🌳 Tree Details</h3>
+    <p id="treeInfoContent"></p>
+    <button class="btn btn-primary" onclick="closeTreeInfo()">Close</button>
+</div>
+
+<script>
+function showTreeInfo(status, species, date, subject, protectedStatus, growth) {
+
+    let content = `
+        <strong>Tier:</strong> ${status}<br>
+        <strong>Species:</strong> ${species}<br>
+        <strong>Planted:</strong> ${date}<br>
+        <strong>Subject:</strong> ${subject}<br>
+        <strong>Growth:</strong> ${growth}<br>
+        <strong>Protected:</strong> ${protectedStatus}
+    `;
+
+    document.getElementById("treeInfoContent").innerHTML = content;
+    document.getElementById("treeInfoPopup").style.display = "block";
+}
+
+function closeTreeInfo() {
+    document.getElementById("treeInfoPopup").style.display = "none";
+}
+</script>
+
+{% endblock %}

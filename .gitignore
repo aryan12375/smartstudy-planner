@@ -1,0 +1,35 @@
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+static_collected/
+staticfiles/
+
+# Assets & Large Files
+*.zip
+*.rar
+*.7z
+nukelist.txt
+
+# Environment
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Project specific
+planner/static/models/trees/*.glb
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
