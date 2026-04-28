@@ -2,7 +2,7 @@
 
 **Turn Productivity into a 3D Ecosystem.**
 
-SmartStudy  Planner is a gamified study management platform that helps students stay consistent by turning their academic progress into a flourishing digital forest. Using immersive **Three.js** visualizations and advanced scheduling algorithms, the app makes productivity both visual and rewarding.
+SmartStudy Planner is a gamified study management platform that helps students stay consistent by turning their academic progress into a flourishing digital forest. Using immersive **Three.js** visualizations and advanced scheduling algorithms, the app makes productivity both visual and rewarding.
 
 ---
 
